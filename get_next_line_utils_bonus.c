@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kmarques <kmarques@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/23 18:03:58 by kmarques          #+#    #+#             */
-/*   Updated: 2021/08/28 02:18:16 by kmarques         ###   ########.fr       */
+/*   Updated: 2021/08/28 00:42:32 by kmarques         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 /**
  * @brief Length of the string
@@ -70,8 +70,6 @@ char	*ft_joinbuffer(char *save, char *buffer)
 
 	count = ft_strlen(save) + ft_strlen(buffer);
 	tmp = malloc((count + 1) * sizeof(char));
-	if (tmp == NULL)
-		return (NULL);
 	i = 0;
 	while (*(save + i) != '\0')
 	{
@@ -108,8 +106,6 @@ char	*ft_getnline(char *save)
 	if (save[count] == '\n')
 		count++;
 	line = malloc((count + 1) * sizeof(char));
-	if (line == NULL)
-		return (NULL);
 	i = 0;
 	while (count > i)
 	{
@@ -138,8 +134,6 @@ char	*ft_trimsave(char *save)
 	if (*(save + i) == '\n')
 		i++;
 	newsave = malloc((ft_strlen(save + i) + 1) * sizeof(char));
-	if (newsave == NULL)
-		return (NULL);
 	j = 0;
 	while (*(save + i) != '\0')
 	{

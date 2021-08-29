@@ -6,24 +6,18 @@
 /*   By: kmarques <kmarques@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/22 16:57:34 by kmarques          #+#    #+#             */
-/*   Updated: 2021/08/23 18:04:42 by kmarques         ###   ########.fr       */
+/*   Updated: 2021/08/28 00:31:49 by kmarques         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-size_t	ft_strlen(const char *s)
-{
-	size_t	l;
-
-	l = 0;
-	while (s[l])
-		l++;
-		if (s[l] == '\n')
-			return (l + 1);
-	return (l);
-}
-
+/**
+ * @brief Find a `\n` on the string
+ *
+ * @param buffer String to search
+ * @return int Return 1 if find or 0 if not
+ */
 int	ft_findnl(char *buffer)
 {
 	while (*buffer)
@@ -35,52 +29,36 @@ int	ft_findnl(char *buffer)
 	return (0);
 }
 
-char	*ft_writeline(char *line, char *buffer)
-{
-	size_t	i;
-	size_t	j;
-	size_t	size;
-	char	*tmp;
-
-	i = 0;
-	j = 0;
-	size = ft_strlen(line) + ft_strlen(buffer);
-	tmp = ft_strdup(line);
-	free(line);
-	line = malloc((size + 1) * sizeof(char));
-	while (*(tmp + j))
-	{
-		*(line + j) = *(tmp + j);
-		j++;
-	}
-	while (j < size)
-	{
-		*(line + j) = *(buffer + i);
-		i++;
-		j++;
-	}
-	*(line + j) = '\0';
-	return (line);
-}
-
+/**
+ * @brief Get the next line of file
+ *
+ * @param fd File descriptor
+ * @return char* Return line
+ */
 char	*get_next_line(int fd)
 {
-	char		*buffer;
+	char		buffer[BUFFER_SIZE + 1];
 	char		*line;
-	//static char	*save;
-	int			nl;
+	static char	*save;
+	ssize_t		bytesread;
 
-	nl =  0;
-	buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
-	buffer[BUFFER_SIZE] = '\0';
-	line = malloc(1 * sizeof(char));
-	*line = '\0';
-	while (!nl)
+	if (!save)
+		save = ft_strdup("\0");
+	while (!ft_findnl(save))
 	{
-		read(fd, buffer, BUFFER_SIZE);
-		nl = ft_findnl(buffer);
-		line = ft_writeline(line, buffer);
+		bytesread = read(fd, buffer, BUFFER_SIZE);
+		if (((*save == '\0') && (bytesread == 0)) || (bytesread == -1))
+		{
+			free (save);
+			save = NULL;
+			return (NULL);
+		}
+		if (bytesread == 0)
+			break ;
+		buffer[bytesread] = '\0';
+		save = ft_joinbuffer(save, buffer);
 	}
-	free(buffer);
+	line = ft_getnline(save);
+	save = ft_trimsave(save);
 	return (line);
 }
